@@ -13,9 +13,11 @@ var Stack = function() {
 
   someInstance.pop = function() {
     if (key > 0) {
-      delete storage[key];
+      var toPop = storage[key-1];
+      delete storage[key-1];
       key--;
     }
+    return toPop;
   };
 
   someInstance.size = function() {
