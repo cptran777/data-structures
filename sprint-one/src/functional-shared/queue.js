@@ -25,7 +25,7 @@ var queueMethods = {
       var result = this.storage[0];
       this.objectSize--;
       for ( var i = 1; i <= this.objectSize; i++) {
-        this.storage[i-1] = this.storage[i];
+        this.storage[i - 1] = this.storage[i];
       }
     }
     return result;
