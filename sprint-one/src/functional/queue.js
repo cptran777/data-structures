@@ -17,10 +17,12 @@ var Queue = function() {
 
   someInstance.dequeue = function() {
     if (size > 0) {
+      var toDequeue = storage[firstKey];
       delete storage[firstKey];
       size--;
       firstKey++;
     }
+    return toDequeue;
   };
 
   someInstance.size = function() {
