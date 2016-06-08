@@ -6,13 +6,21 @@ var Queue = function() {
 
   // Implement the methods below
   var size = 0;
+  var firstKey = 0;
+  var nextKey = 0;
 
   someInstance.enqueue = function(value) {
-    storage[size] = value;
+    storage[nextKey] = value;
     size++;
+    nextKey++;
   };
 
   someInstance.dequeue = function() {
+    if (size > 0) {
+      delete storage[firstKey];
+      size--;
+      firstKey++;
+    }
   };
 
   someInstance.size = function() {
