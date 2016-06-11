@@ -53,11 +53,17 @@ describe('binarySearchTree', function() {
     var array = [];
     var func = function(value) { array.push(value); };
     binarySearchTree.insert(3);
+    expect(binarySearchTree.treeDepth).to.equal(2);
     binarySearchTree.insert(6);
+    expect(binarySearchTree.treeDepth).to.equal(2);
     binarySearchTree.insert(7);
+    expect(binarySearchTree.treeDepth).to.equal(3);
     binarySearchTree.insert(8);
+    expect(binarySearchTree.treeDepth).to.equal(4);
     binarySearchTree.insert(9);
+    expect(binarySearchTree.treeDepth).to.equal(5);
     binarySearchTree.insert(10);
+    expect(binarySearchTree.treeDepth).to.equal(6);
     binarySearchTree.breadthFirstLog(func);
     expect(array).to.eql([7, 5, 9, 3, 6, 8, 10]);    
   });

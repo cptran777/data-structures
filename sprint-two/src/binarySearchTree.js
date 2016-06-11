@@ -8,8 +8,8 @@ var BinarySearchTree = function(value) {
   obj.parent = null;
   obj.value = value;
   obj.depth = 1;
-  var isRoot = true;
-  var treeDepth = 1;
+  obj.isRoot = true;
+  obj.treeDepth = 1;
 
   obj.contains = function (val) {
     if (obj.value === val) {
@@ -36,10 +36,10 @@ var BinarySearchTree = function(value) {
     if (val < obj.value) {
       if (obj.left === null) {
         obj.left = addNewTree();
-        if (!isRoot) {
+        if (!obj.isRoot) {
           return obj.left.depth;
         } else {
-          treeDepth = obj.left.depth;
+          obj.treeDepth = obj.left.depth;
         }
         // if (obj.left.depth > 2 * Math.log2(itemCount + 1)) {
         //   var rootTree = obj.parent;
@@ -49,19 +49,19 @@ var BinarySearchTree = function(value) {
         //   rootTree.rebalance();
         // }
       } else {
-        if (isRoot) {
-          treeDepth = obj.left.insert(val);
+        if (obj.isRoot) {
+          obj.treeDepth = obj.left.insert(val);
         } else {
-          return obj.right.insert(val);
+          return obj.left.insert(val);
         }
       }
     } else if (val > obj.value) {
       if (obj.right === null) {
         obj.right = addNewTree();
-        if (!isRoot) {
+        if (!obj.isRoot) {
           return obj.right.depth;
         } else {
-          treeDepth = obj.right.depth;
+          obj.treeDepth = obj.right.depth;
         }
         // if (obj.right.depth > 2 * Math.log2(itemCount + 1)) {
         //   debugger;
@@ -72,14 +72,14 @@ var BinarySearchTree = function(value) {
         //   rootTree.rebalance();
         // }
       } else {
-        if (isRoot) {
-          treeDepth = obj.right.insert(val);
+        if (obj.isRoot) {
+          obj.treeDepth = obj.right.insert(val);
         } else {
           return obj.right.insert(val);
         }
       }
     }
-    if (isRoot && obj.checkBalance()) {
+    if (obj.isRoot && obj.checkBalance()) {
       obj.rebalance();
     }
   };
@@ -110,7 +110,10 @@ var BinarySearchTree = function(value) {
   };
 
   obj.checkBalance = function () {
-    return treeDepth > 2 * Math.log2(itemCount + 1);
+    var test1 = obj.treeDepth;
+    var test2 = itemCount;
+    var testBool = obj.treeDepth >= 2 * Math.log2(itemCount + 1);
+    return obj.treeDepth >= 2 * Math.log2(itemCount + 1);
   };
 
   obj.rebalance = function() {
@@ -119,7 +122,9 @@ var BinarySearchTree = function(value) {
     obj.depthFirstLog(function fillArray(leaf) {
       storage.push(leaf);
     });
-    console.log(storage);
+    storage = storage.sort(function(a, b){
+      return a - b;
+    });
 
     var insertionRecursion = function(arr, createTree) {
       if (arr.length <= 1) {
@@ -140,7 +145,9 @@ var BinarySearchTree = function(value) {
         insertionRecursion(arrayB, false);  
       }
     };
-    insertionRecursion(storage.sort(), true);
+    insertionRecursion(storage.sort(function ascending (a, b){
+      return a - b;
+    }), true);
     obj = newTree;
   };
 
