@@ -8,6 +8,8 @@ var BinarySearchTree = function(value) {
   obj.parent = null;
   obj.value = value;
   obj.depth = 1;
+  var isRoot = true;
+  var treeDepth = 1;
 
   obj.contains = function (val) {
     if (obj.value === val) {
@@ -22,42 +24,63 @@ var BinarySearchTree = function(value) {
 
   obj.insert = function (val) {
     //var newTree = BinarySearchTree(val);
+    itemCount++;
     var addNewTree = function () {
-      itemCount++;
       var newTree = BinarySearchTree(val);
       newTree.parent = obj;
       newTree.depth = obj.depth + 1;
+      newTree.isRoot = false;
       return newTree;
     };
 
     if (val < obj.value) {
       if (obj.left === null) {
         obj.left = addNewTree();
-        if (obj.left.depth > 2 * Math.log2(itemCount + 1)) {
-          debugger;
-          var rootTree = obj.parent;
-          while (rootTree.parent !== null) {
-            rootTree = rootTree.parent;
-          }
-          rootTree.rebalance();
+        if (!isRoot) {
+          return obj.left.depth;
+        } else {
+          treeDepth = obj.left.depth;
         }
+        // if (obj.left.depth > 2 * Math.log2(itemCount + 1)) {
+        //   var rootTree = obj.parent;
+        //   while (rootTree.parent !== null) {
+        //     rootTree = rootTree.parent;
+        //   }
+        //   rootTree.rebalance();
+        // }
       } else {
-        obj.left.insert(val);
+        if (isRoot) {
+          treeDepth = obj.left.insert(val);
+        } else {
+          return obj.right.insert(val);
+        }
       }
     } else if (val > obj.value) {
       if (obj.right === null) {
         obj.right = addNewTree();
-        if (obj.right.depth > 2 * Math.log2(itemCount + 1)) {
-          debugger;
-          var rootTree = obj.parent;
-          while (rootTree.parent !== null) {
-            rootTree = rootTree.parent;
-          }
-          rootTree.rebalance();
+        if (!isRoot) {
+          return obj.right.depth;
+        } else {
+          treeDepth = obj.right.depth;
         }
+        // if (obj.right.depth > 2 * Math.log2(itemCount + 1)) {
+        //   debugger;
+        //   var rootTree = obj.parent;
+        //   while (rootTree.parent !== null) {
+        //     rootTree = rootTree.parent;
+        //   }
+        //   rootTree.rebalance();
+        // }
       } else {
-        obj.right.insert(val);
+        if (isRoot) {
+          treeDepth = obj.right.insert(val);
+        } else {
+          return obj.right.insert(val);
+        }
       }
+    }
+    if (isRoot && obj.checkBalance()) {
+      obj.rebalance();
     }
   };
 
@@ -84,6 +107,10 @@ var BinarySearchTree = function(value) {
         queue.enqueue(currentTree.right);
       }
     }
+  };
+
+  obj.checkBalance = function () {
+    return treeDepth > 2 * Math.log2(itemCount + 1);
   };
 
   obj.rebalance = function() {
